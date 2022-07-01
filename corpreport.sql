@@ -113,8 +113,6 @@
 			ON s1.[CorpCompositeId] = a.[CorpCompositeId];
 
 	--EXECUTE [SolveMarketData].[dbo].[spPrintNow] N'C - Setting Period Record'
-
-
 	
 	DROP TABLE IF EXISTS #TempSummary
 	SELECT [a].[SecurityId],
@@ -348,7 +346,6 @@
 	INTO ##TempObservedPrices_dev
 	FROM #TempObservedPrices
 	--EXECUTE [SolveMarketData].[dbo].[spPrintNow] N'H.1 - Building Common Providers 1'
-
 
 
 	--TOP 200 Winners & Losers

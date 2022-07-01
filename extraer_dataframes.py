@@ -1,36 +1,42 @@
-from multiprocessing import connection
 import os, pandas as pd
 import sqlalchemy as s
 
-sql_file = "corpreport.sql"
-queryfromfile = open(sql_file).read()
+# Constants
+servername = 'saaws-sql14'
+port = '1433'
+dbname = 'SolveComposite'
+
+# Queries
+queryfromfile = open("corpreport.sql").read()
 cleanup_query = '''
 	drop table if exists ##ReportDates_dev;
 	drop table if exists ##TempBidOfferVolume_dev;
+	drop table if exists ##TempWinners_dev;
 	drop table if exists ##TempLosers_dev;
 	drop table if exists ##TempMostQuoted_dev;
 	drop table if exists ##TempObservedPrices_dev;
 	drop table if exists ##TempSentiment_dev;
 	drop table if exists ##TempTopQuoteVolume_dev;
-	drop table if exists ##TempWinners_dev;
+	drop table if exists ##ProgressTest;
 '''
-
 testquery = open("testquery.sql").read()
 
-# pyodbc
-servername = 'saaws-sql14'
-port = '1433'
-dbname = 'SolveComposite'
-
+# Logic
 engine = s.create_engine('mssql+pymssql://@{}:{}/{}'.format(servername, port, dbname)) #?trusted_connection=yes&driver=ODBC+Driver+17+for+SQL+Server
 #engine = create_engine('mssql+pyodbc://@saaws-sql14/SolveComposite?trusted_connection=yes&driver=ODBC+Driver+13+for+SQL+Server')
 connection = engine.connect()
 #cursor = connection.cursor()
 
 # cursor = connection.execute(queryfromfile)
-df = pd.read_sql(testquery, connection)
+connection.execute(testquery)
+df = pd.read_sql("select * from ##ProgressTest", connection) # 
 print(df)
-df.to_excel("output.xlsx")
+df = pd.read_sql("select * from ##TempWinners_dev", connection) # 
+print(df)
+df = pd.read_sql("select * from ##TempLosers_dev", connection) # 
+print(df)
+connection.execute(cleanup_query)
+#df.to_excel("output.xlsx")
 #cursor.close()
 #print(cursor.description)
 
