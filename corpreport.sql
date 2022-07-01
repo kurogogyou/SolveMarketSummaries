@@ -38,7 +38,9 @@
 
 	--EXECUTE [SolveMarketData].[dbo].[spPrintNow] N'Start'
 
+    drop table if exists ##ReportDates_dev;
 	SELECT @ReportDate [ReportDate], @previousPeriodEndDate [PreviousReportDate]
+    into ##ReportDates_dev;
 	
 	DROP TABLE IF EXISTS #TempEODSnap
 	SELECT  CorpCompositeId,
